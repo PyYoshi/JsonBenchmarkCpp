@@ -1,28 +1,29 @@
 # Makefile for JsonBenchmarkCpp
 # A small program to compare perfomance of different json libs available
-# 
+#
 # Copyright Lijo Antony 2011
 # Distributed under Apache License, Version 2.0
 # see accompanying file LICENSE.txt
 
-CC=g++
+CC=clang++
 CFLAGS=-c -std=c++11 -O3 -ffast-math -fexpensive-optimizations -DNDEBUG
-LDFLAGS=libs/libjson/libjson/libjson.a -lrt libs/json_spirit/json_spirit_v4.05/build/json_spirit/libjson_spirit.a
+LDFLAGS=libs/libjson/libjson/libjson.a libs/json_spirit/json_spirit_v4.05/build/json_spirit/libjson_spirit.a
 OBJECTS=$(SOURCES:.cpp=.o)
 INCLUDE=\
 		-Ilibs/cajun/cajun\
 		-Ilibs/json_spirit/json_spirit_v4.05/json_spirit\
 		-Ilibs/libjson/libjson\
 		-Ilibs/json-parser\
-		-Ilibs/AveryWs
+		-Ilibs/AveryWs\
+		-Ilibs/json11
 
 EXECUTABLE=JsonBenchmarkCpp
 
-SOURCES=main.cpp libs/json-parser/json.c
+SOURCES=main.cpp libs/json-parser/json.c libs/json11/json11.cpp
 
 all: cajun json_spirit libjson $(SOURCES) $(EXECUTABLE)
-		
-cajun: 
+
+cajun:
 	if [ ! -d "libs/cajun/cajun" ]; then \
 		unzip libs/cajun/cajun.zip -d libs/cajun; \
 	fi
@@ -43,7 +44,7 @@ libjson:
 	fi
 	$(MAKE) -w -C libs/json_spirit/json_spirit_v4.05/build
 
-$(EXECUTABLE): $(OBJECTS) 
+$(EXECUTABLE): $(OBJECTS)
 		$(CC) $(OBJECTS) $(LDFLAGS) -o $@
 
 .cpp.o:

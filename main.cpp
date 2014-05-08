@@ -51,6 +51,9 @@
 //json11 headers
 #include <json11.hpp>
 
+// picojson headers
+#include <picojson.h>
+
 // compat osx
 void time_(CLOCK_ID_T clock, struct timespec* t)
 {
@@ -233,6 +236,29 @@ void json11Benchmark(std::string jsonString) {
     std::cout << std::endl;
 }
 
+void picojsonBenchmark(std::string jsonString) {
+    timespec time1, time2;
+    picojson::value val;
+    std::string err;
+
+    std::cout << std::setw(25) << "picojson";
+
+    //Parsing the string
+    time_(CLOCK_PROCESS_CPUTIME_ID, &time1);
+    picojson::parse(val, jsonString.begin(), jsonString.end(), &err);
+    time_(CLOCK_PROCESS_CPUTIME_ID, &time2);
+
+    printTimeDiff(time1, time2);
+
+    //Serialize to string
+    time_(CLOCK_PROCESS_CPUTIME_ID, &time1);
+    val.serialize();
+    time_(CLOCK_PROCESS_CPUTIME_ID, &time2);
+
+    printTimeDiff(time1, time2);
+    std::cout << std::endl;
+}
+
 int main()
 {
 
@@ -265,6 +291,7 @@ int main()
     libjsonBenchmark(buff);
     jsonparserBenchmark(buff);
     json11Benchmark(buff);
+    picojsonBenchmark(buff);
 
     return 0;
 }

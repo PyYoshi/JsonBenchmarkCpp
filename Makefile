@@ -15,7 +15,8 @@ INCLUDE=\
 		-Ilibs/libjson/libjson\
 		-Ilibs/json-parser\
 		-Ilibs/AveryWs\
-		-Ilibs/json11
+		-Ilibs/json11\
+		-Ilibs/picojson
 
 EXECUTABLE=JsonBenchmarkCpp
 

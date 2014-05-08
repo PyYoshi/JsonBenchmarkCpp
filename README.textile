@@ -1,4 +1,4 @@
-h1. JsonBenchmarkCpp 
+h1. JsonBenchmarkCpp
 
 JsonBenchmarkCpp is a small program to benchmark various JSON
 frameworks in c++
@@ -10,6 +10,9 @@ Currently supports following libs,
 # "libjson":http://sourceforge.net/projects/libjson
 # "json-parser":https://github.com/udp/json-parser
 # "AveryWs js":https://github.com/matthewaveryusa/averyws
+# "json11":https://github.com/dropbox/json11
+# "picojson":https://github.com/kazuho/picojson
+# "rapidjson":https://code.google.com/p/rapidjson/
 
 See my "blog post":http://www.lijoantony.com/?p=5 for details.
 
@@ -18,8 +21,8 @@ h2. Building
 # Install "git":http://git-scm.com
 # @git clone git://github.com/lijoantony/JsonBenchmarkCpp.git@
 # Edit main.cpp to suit your needs
-# Either edit the Makefile as you like and use make to build the executable 
-  or use your favourite build system to compile and link main.cpp with the libs. 
+# Either edit the Makefile as you like and use make to build the executable
+  or use your favourite build system to compile and link main.cpp with the libs.
 
 h2. Results Summary
 
@@ -28,13 +31,15 @@ Frameworks ranked in the order "libjson":http://sourceforge.net/projects/libjson
 Eg:
 
 bc. $./JsonBenchmarkCpp > results.dat
-averydb@debian:~/gits/JsonBenchmarkCpp$ cat results.dat  
-#library                 parsing                  writing                  
-cajun                    669                      160                      
-json_spirit              14907                    731                      
-libjson                  139                      203                      
-Avery                    35                       55                       
-json_parser              114                      
+averydb@debian:~/gits/JsonBenchmarkCpp$ cat results.dat
+#library                 parsing                  writing
+cajun                    420                      59
+json_spirit              4739                     1498
+libjson                  215                      144
+json_parser              105
+json11                   145                      36
+picojson                 164                      35
+rapidjson                44                       21
 
 
 Here the numbers shows time taken by each lib for the particular operation in microseconds.

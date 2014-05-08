@@ -10,6 +10,7 @@ CFLAGS=-c -std=c++11 -O3 -ffast-math -fexpensive-optimizations -DNDEBUG
 LDFLAGS=libs/libjson/libjson/libjson.a libs/json_spirit/json_spirit_v4.05/build/json_spirit/libjson_spirit.a
 OBJECTS=$(SOURCES:.cpp=.o)
 INCLUDE=\
+		-Ilibs\
 		-Ilibs/cajun/cajun\
 		-Ilibs/json_spirit/json_spirit_v4.05/json_spirit\
 		-Ilibs/libjson/libjson\

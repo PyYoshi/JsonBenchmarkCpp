@@ -54,6 +54,11 @@
 // picojson headers
 #include <picojson.h>
 
+// rapidjson headers
+#include <rapidjson/document.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
+
 // compat osx
 void time_(CLOCK_ID_T clock, struct timespec* t)
 {
@@ -259,6 +264,32 @@ void picojsonBenchmark(std::string jsonString) {
     std::cout << std::endl;
 }
 
+void rapidjsonBenchmark(std::string jsonString) {
+    timespec time1, time2;
+    rapidjson::Document doc;
+    char * jsonChar = new char [jsonString.length() + 1];
+    std::strcpy(jsonChar, jsonString.c_str());
+    rapidjson::StringBuffer strbuf;
+	rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+
+    std::cout << std::setw(25) << "rapidjson";
+
+    //Parsing the string
+    time_(CLOCK_PROCESS_CPUTIME_ID, &time1);
+    doc.Parse<0>(jsonChar);
+    time_(CLOCK_PROCESS_CPUTIME_ID, &time2);
+
+    printTimeDiff(time1, time2);
+
+    //Serialize to string
+    time_(CLOCK_PROCESS_CPUTIME_ID, &time1);
+    doc.Accept(writer);
+    time_(CLOCK_PROCESS_CPUTIME_ID, &time2);
+
+    printTimeDiff(time1, time2);
+    std::cout << std::endl;
+}
+
 int main()
 {
 
@@ -292,6 +323,7 @@ int main()
     jsonparserBenchmark(buff);
     json11Benchmark(buff);
     picojsonBenchmark(buff);
+    rapidjsonBenchmark(buff);
 
     return 0;
 }

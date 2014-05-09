@@ -6,8 +6,8 @@
 # see accompanying file LICENSE.txt
 
 CC=clang++
-CFLAGS=-c -std=c++11 -O3 -ffast-math -fexpensive-optimizations -DNDEBUG
-LDFLAGS=libs/libjson/libjson/libjson.a libs/json_spirit/json_spirit_v4.05/build/json_spirit/libjson_spirit.a
+CFLAGS=-c -std=c++11 -O3 -ffast-math -fexpensive-optimizations -DNDEBUG -DENABLE_JSONC
+LDFLAGS=libs/libjson/libjson/libjson.a libs/json_spirit/json_spirit_v4.05/build/json_spirit/libjson_spirit.a libs/json-c/.libs/libjson-c.a
 OBJECTS=$(SOURCES:.cpp=.o)
 INCLUDE=\
 		-Ilibs\
@@ -17,13 +17,14 @@ INCLUDE=\
 		-Ilibs/json-parser\
 		-Ilibs/AveryWs\
 		-Ilibs/json11\
-		-Ilibs/picojson
+		-Ilibs/picojson\
+		-Ilibs/json-c
 
 EXECUTABLE=JsonBenchmarkCpp
 
 SOURCES=main.cpp libs/json-parser/json.c libs/json11/json11.cpp
 
-all: cajun json_spirit libjson $(SOURCES) $(EXECUTABLE)
+all: cajun json_spirit libjson json_c $(SOURCES) $(EXECUTABLE)
 
 cajun:
 	if [ ! -d "libs/cajun/cajun" ]; then \
@@ -45,6 +46,11 @@ libjson:
 		unzip libs/libjson/libjson_7.4.0.zip -d libs/libjson; \
 	fi
 	$(MAKE) -w -C libs/json_spirit/json_spirit_v4.05/build
+
+json_c:
+	if [ ! -f "libs/json-c/.libs/libjson-c.a"]; then \
+		cd libs/json-c;sh autogen.sh;./configure;make;cd -; \
+	fi
 
 $(EXECUTABLE): $(OBJECTS)
 		$(CC) $(OBJECTS) $(LDFLAGS) -o $@

@@ -43,10 +43,15 @@
 //libjson headers
 #include <libjson.h>
 
-//json-parser headers
-#define json_string __json_string
-#include <json.h>
-#undef json_string
+#ifdef ENABLE_JSONC
+    // json-c headers
+    #include <json-c/json.h>
+#else
+    //json-parser headers
+    #define json_string __json_string
+    #include <json.h>
+    #undef json_string
+#endif
 
 //json11 headers
 #include <json11.hpp>
@@ -195,6 +200,7 @@ void libjsonBenchmark(std::string jsonString)
     std::cout << std::endl;
 }
 
+#ifndef ENABLE_JSONC
 /*
  * @brief function for json-parser benchmark
  *
@@ -217,6 +223,7 @@ void jsonparserBenchmark(std::string jsonString)
 
     std::cout << std::endl;
 }
+#endif
 
 void json11Benchmark(std::string jsonString) {
     timespec time1, time2;
@@ -290,6 +297,31 @@ void rapidjsonBenchmark(std::string jsonString) {
     std::cout << std::endl;
 }
 
+void jsoncBenchmark(std::string jsonString) {
+    timespec time1, time2;
+    char * jsonChar = new char [jsonString.length() + 1];
+    std::strcpy(jsonChar, jsonString.c_str());
+    json_object * jo;
+
+    std::cout << std::setw(25) << "json-c";
+
+    //Parsing the string(bad practice XD)
+    // time_(CLOCK_PROCESS_CPUTIME_ID, &time1);
+    jo = json_object_new_string(jsonChar);
+    // time_(CLOCK_PROCESS_CPUTIME_ID, &time2);
+
+    // printTimeDiff(time1, time2);
+    std::cout << std::setw(25) << "";
+
+    //Serialize to string
+    time_(CLOCK_PROCESS_CPUTIME_ID, &time1);
+    json_object_to_json_string(jo);
+    time_(CLOCK_PROCESS_CPUTIME_ID, &time2);
+
+    printTimeDiff(time1, time2);
+    std::cout << std::endl;
+}
+
 int main()
 {
 
@@ -320,10 +352,15 @@ int main()
     cajunBenchmark(buff);
     jsonspiritBenchmark(buff);
     libjsonBenchmark(buff);
-    jsonparserBenchmark(buff);
     json11Benchmark(buff);
     picojsonBenchmark(buff);
     rapidjsonBenchmark(buff);
+
+    #ifdef ENABLE_JSONC
+        jsoncBenchmark(buff);
+    #else
+        jsonparserBenchmark(buff);
+    #endif
 
     return 0;
 }
